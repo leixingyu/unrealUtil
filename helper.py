@@ -3,16 +3,6 @@ import os
 import unreal
 
 
-def normalize_path(path):
-    """
-    Normalize path to Unreal readable format
-
-    :param path: str. original path
-    :return: str. formatted path
-    """
-    return os.path.normpath(path).replace('\\', '/')
-
-
 def get_selected_asset():
     """
     Get selected assets in content browser
@@ -65,7 +55,10 @@ def create_folder(root, name):
     :return: bool. whether the creation is successful
     """
     path = os.path.join(root, name)
-    return unreal.EditorAssetLibrary.make_directory(path)
+    if not unreal.EditorAssetLibrary.make_directory(path):
+        return None
+
+    return path
 
 
 def get_actor(label):
