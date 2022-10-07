@@ -83,3 +83,27 @@ def set_skm_anim(u_section, u_anim_seq):
     # section to house anim
     u_section.set_editor_property('params', param)
     u_section.set_completion_mode(unreal.MovieSceneCompletionMode.KEEP_STATE)
+
+
+def set_binding_cam_anim(fbx, u_binding):
+    """
+    Import .fbx animation on camera binding track
+
+    :param fbx: str. camera .fbx path
+    :param u_binding: unreal.SequencerBindingProxy
+    """
+    settings = unreal.MovieSceneUserImportFBXSettings()
+    settings.set_editor_property('create_cameras', False)
+    settings.set_editor_property('force_front_x_axis', False)
+    settings.set_editor_property('match_by_name_only', False)
+    settings.set_editor_property('reduce_keys', False)
+
+    u_seq = u_binding.get_editor_property('sequence')
+    u_world = unreal.EditorLevelLibrary.get_editor_world()
+    unreal.SequencerTools.import_level_sequence_fbx(
+        u_world,
+        u_seq,
+        [u_binding],
+        settings,
+        fbx
+    )
