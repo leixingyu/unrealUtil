@@ -1,6 +1,17 @@
 import unreal
 
 
+def get_shots(u_master):
+    [shot_track] = u_master.find_master_tracks_by_type(
+        unreal.MovieSceneCinematicShotTrack)
+    shots = shot_track.get_sections()
+    for shot in shots:
+        name = shot.get_editor_property('SubSequence').get_name()
+        start = shot.get_start_frame()
+        end = shot.get_end_frame()-1
+        print(name, start, end)
+
+
 def create_seq(u_folder, name):
     """
     Create a level u_seq and attach it to a Sequence Helper instance
@@ -135,3 +146,16 @@ def get_bounds(u_seq):
         u_seq.get_playback_range()
     )
     return [u_seq_bound.binding_proxy for u_seq_bound in u_seq_bounds]
+
+
+def remove_binding(u_seq):
+    # https://forums.unrealengine.com/t/python-remove-binding-correctly-in-sequence/482501/3
+    bound_objects = get_bounds(u_seq)
+
+    for bound_object in bound_objects:
+        if bound_object.binding_proxy.get_display_name() == 'binding_name':
+            tracks = bound_object.binding_proxy.get_tracks()
+            for track in tracks:
+                bound_object.binding_proxy.remove_track(track)
+            bound_object.binding_proxy.remove()
+            unreal.LevelSequenceEditorBlueprintLibrary.refresh_current_level_sequence()

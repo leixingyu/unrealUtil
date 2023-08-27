@@ -108,6 +108,27 @@ def create_menu_entry(parent_menu, entry_name, command, section_name=''):
     return entry
 
 
+def create_tool_button(parent_menu, entry_name, command, section_name=''):
+    """
+    Create a menu tool bar button
+
+    :param parent_menu: unreal.ToolMenu. menu to be created in
+    :param entry_name: str. menu entry name
+    :param command: str. python command to execute
+    :param section_name: str. (Optional) name of the menu section
+    :return: unreal.ToolMenuEntry
+    """
+    entry = unreal.ToolMenuEntry(type=unreal.MultiBlockType.TOOL_BAR_BUTTON)
+    entry.set_label(entry_name)
+    entry.set_string_command(
+        type=unreal.ToolMenuStringCommandType.PYTHON,
+        custom_type=unreal.Name(''),
+        string=command
+    )
+    parent_menu.add_menu_entry(section_name, entry)
+    return entry
+
+
 def list_menu(num=1000):
     """
     Query all menu object name
